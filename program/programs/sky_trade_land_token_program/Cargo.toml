@@ -1,0 +1,22 @@
+
+[package]
+name = "sky_trade_land_token_program"
+version = "0.0.0"
+description = "Test Summary"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "sky_trade_land_token_program"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = { version = "0.28.0", features = ["init-if-needed"] }
+mpl-bubblegum = "1.0.0"
+ahash = "=0.8.6"

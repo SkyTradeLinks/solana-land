@@ -1,0 +1,66 @@
+cidl: "0.8"
+info:
+  name: sky_trade_land_token_program
+  title: Sky Trade Land Token Program
+  summary: |-
+    Test Summary
+  version: 0.0.0
+  license:
+    name: test
+    url: test
+types:
+  Data:
+    solana:
+      seeds:
+        - name: "data_account"
+    fields:
+      - name: initialized
+        type: bool
+      - name: authority_account
+        type: sol:pubkey
+      - name: merkle_tree_address
+        type: sol:pubkey
+
+methods:
+  - name: initialize
+    summary: initialize relevant values in our pda account
+    inputs:
+      - name: data_account
+        type: Data
+        solana:
+          attributes: [mut, init_if_needed]
+
+      - name: merkle_tree
+        type: sol:account_info
+
+  - name: mint_token
+    summary: mint land token
+    inputs:
+      - name: data_account
+        type: Data
+
+      - name: merkle_tree
+        type: sol:account_info
+        solana:
+          attributes: [mut]
+
+      - name: metadata_args
+        type: rs:vec<u8>
+
+      - name: recipient
+        type: sol:account_info
+        solana:
+          attributes: [mut]
+
+      - name: tree_config
+        type: sol:account_info
+        solana:
+          attributes: [mut]
+      - name: bubblegum_program
+        type: sol:account_info
+
+      - name: log_wrapper
+        type: sol:account_info
+
+      - name: compression_program
+        type: sol:account_info
