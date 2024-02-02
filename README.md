@@ -67,6 +67,8 @@ In this phase, once we have verified the airspace claim, we then proceed to mint
 Here is an overview of the minting process, as well as the admin UI:
 https://www.loom.com/share/debbe058aaec409fadce8d0bb3688f64?sid=4ebe44f2-f9a3-4ccb-9d29-76a53a9dbb49
 
+<div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/debbe058aaec409fadce8d0bb3688f64?sid=dca8ed13-8d90-4b6e-950e-f4321ba52737" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+
 ### Renting Airspace
 
 Finally, drone operators then locate verified airspaces, and proceed to rent them for a fee. This process mints a rental nft valid for a specific timeframe, as well as distributes the fee to the land owner.
