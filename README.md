@@ -59,7 +59,7 @@ We also ensure that landowners on our system are verifiable individuals. To achi
 
 This includes users claiming an airspace, and providing us with the necessary documents to support this claim. This is then reviewed further.
 
-Here is an overview of the User Interface for Registering An Airspace:
+Here is an overview of the User Interface for Registering An Airspace (click for full recording):
 
 <div>
     <a href="https://www.loom.com/share/66a8175f270b48e48b634db7d0fe1427">
@@ -69,9 +69,9 @@ Here is an overview of the User Interface for Registering An Airspace:
 
 ### Verifying Airspace
 
-In this phase, once we have verified the airspace claim, we then proceed to mint a land nft which is unique and belongs to the owner, making him the sole proprietor for airspace rights.
+In this phase, once we have verified the airspace claim, we then proceed to mint a land NFT which is unique and belongs to the owner, making him the sole proprietor for airspace rights.
 
-Here is an overview of the minting process, as well as the admin UI:
+Here is an overview of the minting process, as well as the admin UI (click for full recording):
 
 <div>
     <a href="https://www.loom.com/share/debbe058aaec409fadce8d0bb3688f64">
@@ -83,7 +83,7 @@ Here is an overview of the minting process, as well as the admin UI:
 
 Finally, drone operators then locate verified airspaces, and proceed to rent them for a fee. This process mints a rental nft valid for a specific timeframe, as well as distributes the fee to the land owner.
 
-Here is an overview of the UI for the minting process:
+Here is an overview of the UI for the minting process (click for full recording):
 
 <div>
     <a href="https://www.loom.com/share/ef2fa9bc3d0f4c47851cabb4f12b1963">
