@@ -1,0 +1,10 @@
+title Sky Trade System
+
+Alice->SkyTrade: Request Property Registration
+note left of SkyTrade: SkyTrade Verifies Request
+SkyTrade -> Alice: Mints Land Token
+
+Bob -> SkyTrade: Airspace Rental Request
+SkyTrade -> Alice: Distribute Fee
+SkyTrade -> Bob: Mints Rental Token for timeslot
+

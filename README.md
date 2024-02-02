@@ -8,7 +8,7 @@ We make this airspace available via smart contracts which mints rental tokens fo
 
 ## Sequence Overview
 
-<image src="https://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgU2t5IFRyYWRlIFN5c3RlbQoKQWxpY2UtPlNreQATBTogUmVxdWVzdCBQcm9wZXJ0eSBSZWdpc3RyYXRpb24Kbm90ZSBsZWZ0IG9mIAArCgA3CCBWZXJpZmllcwA_CAoAEQktPiAAZwU6IE1pbnRzIExhbmQgVG9rZW4KCkJvYiAtPgBFC0FpcnNwYWNlIFJlbnRhbAAyHERpc3RyaWJ1dGUgRmVlAGMNQm9iAGYIAEEHAGsFIGZvciB0aW1lc2xvdAoKCg&s=default" />
+![Sequence Diagram](diagrams/system_sequence_diagram.png)
 
 _Sequence Diagram of SkyTrade_
 
@@ -20,10 +20,12 @@ _Sequence Diagram of SkyTrade_
 - [Solana](https://solana.com/)
 - [Anchor](https://www.anchor-lang.com/)
 - [Codigo.ai](https://www.codigo.ai/)
+- [Solana FM](https://solana.fm/)
+- [Ironforge](https://www.ironforge.cloud/)
+- [Web3Auth](https://web3auth.io/)
 
 ## Core Components, Protocols, and Architecture
-
-<image src="https://res.cloudinary.com/erenaspire7/image/upload/v1706815658/haugi89r1cq3jx6e3fqd.png"/>
+![Architecure Diagram](diagrams/architecture_diagram.png)
 
 _Architecure Diagram Diagram of Core Components_
 
@@ -58,49 +60,70 @@ We also ensure that landowners on our system are verifiable individuals. To achi
 This includes users claiming an airspace, and providing us with the necessary documents to support this claim. This is then reviewed further.
 
 Here is an overview of the User Interface for Registering An Airspace:
-https://www.loom.com/share/66a8175f270b48e48b634db7d0fe1427?sid=885bed63-02e0-486f-a49e-63bf078ce93a
+
+<div>
+    <a href="https://www.loom.com/share/66a8175f270b48e48b634db7d0fe1427">
+        <img src="https://cdn.loom.com/sessions/thumbnails/66a8175f270b48e48b634db7d0fe1427-with-play.gif">
+    </a>
+</div>
 
 ### Verifying Airspace
 
 In this phase, once we have verified the airspace claim, we then proceed to mint a land nft which is unique and belongs to the owner, making him the sole proprietor for airspace rights.
 
 Here is an overview of the minting process, as well as the admin UI:
-https://www.loom.com/share/debbe058aaec409fadce8d0bb3688f64?sid=4ebe44f2-f9a3-4ccb-9d29-76a53a9dbb49
 
-<div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/debbe058aaec409fadce8d0bb3688f64?sid=dca8ed13-8d90-4b6e-950e-f4321ba52737" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+<div>
+    <a href="https://www.loom.com/share/debbe058aaec409fadce8d0bb3688f64">
+        <img src="https://cdn.loom.com/sessions/thumbnails/debbe058aaec409fadce8d0bb3688f64-with-play.gif">
+    </a>
+</div>
 
 ### Renting Airspace
 
 Finally, drone operators then locate verified airspaces, and proceed to rent them for a fee. This process mints a rental nft valid for a specific timeframe, as well as distributes the fee to the land owner.
 
 Here is an overview of the UI for the minting process:
-https://www.loom.com/share/ef2fa9bc3d0f4c47851cabb4f12b1963?sid=57b5dafb-6446-4699-a65c-2603a541d111
+
+<div>
+    <a href="https://www.loom.com/share/ef2fa9bc3d0f4c47851cabb4f12b1963">
+        <img src="https://cdn.loom.com/sessions/thumbnails/ef2fa9bc3d0f4c47851cabb4f12b1963-with-play.gif">
+    </a>
+</div>
 
 ## Project Screenshots
+
 <img src="https://res.cloudinary.com/erenaspire7/image/upload/v1706818633/jhtcvkyu4ve4wjqqh2ym.png">
 
-*Auth Page*
+_Auth Page_
 
 <img src="https://res.cloudinary.com/erenaspire7/image/upload/v1706818634/havrfs3uvxd3x7zsmufd.png">
 
-*Dashboard Page*
+_Dashboard Page_
 
 <img src="https://res.cloudinary.com/erenaspire7/image/upload/v1706818634/uadqt2sspagxbbcxtqwj.png">
 
-*Claim Airspace UI*
+_Claim Airspace UI_
 
 <img src="https://res.cloudinary.com/erenaspire7/image/upload/v1706818634/ibpzb3fm8reck0pjykdu.png">
 
-*Rent Airspace UI*
+_Rent Airspace UI_
 
 <img src="https://res.cloudinary.com/erenaspire7/image/upload/v1706818634/grdpgnhtguy1z7rglxs7.png">
 
-*Modal with expected date and time*
-
+_Modal with expected date and time_
 
 ## UI/UX Designs
 
 Explore our UI/UX designs on [Figma](lhttps://www.figma.com/file/NwkvHLwU7u52LdxKg37x14/sky-trade?type=design&node-id=33-90&mode=design&t=LtQm2TN7Wlayb7ik-0).
+
+## Other Component Repositories
+
+- https://github.com/SkyTradeLinks/address-claiming
+- https://github.com/SkyTradeLinks/solana-rental
+- https://github.com/SkyTradeLinks/backend
+- https://github.com/SkyTradeLinks/admin_backend
+- https://github.com/SkyTradeLinks/solana-rental
 
 ## Acknowledgments
 
