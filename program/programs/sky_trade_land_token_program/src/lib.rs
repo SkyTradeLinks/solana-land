@@ -70,3 +70,15 @@ pub mod sky_trade_land_token_program {
         pub system_program: Program<'info, System>,
     }
 }
+
+#[error_code]
+pub enum MyError {
+    #[msg("Program already initialized!")]
+    AlreadyInitialized,
+
+    #[msg("Invalid authority provided!")]
+    InvalidAuthority,
+
+    #[msg("Provided Tree Address is invalid")]
+    InvalidTreeAddressPassed,
+}

@@ -1,19 +1,18 @@
 #![allow(unused)]
 use crate::*;
 use anchor_lang::prelude::*;
-use mpl_bubblegum::{instructions::{MintV1CpiBuilder}, types::MetadataArgs};
+use mpl_bubblegum::{instructions::MintV1CpiBuilder, types::MetadataArgs};
 
 pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()> {
-    if ctx.accounts.data_account.initialized == false {
-        // throw not initialized
-    }
+
+    
 
     if ctx.accounts.data_account.authority_account != ctx.accounts.fee_payer.key() {
-        // return err!(MyError::InvalidAuthority);
+    return err!(MyError::InvalidAuthority);
     }
 
     if ctx.accounts.data_account.merkle_tree_address != ctx.accounts.merkle_tree.key() {
-        // return err!(MyError::InvalidRentalAddressPassed);
+        return err!(MyError::InvalidTreeAddressPassed);
     }
 
     let mint_metadata = MetadataArgs::try_from_slice(metadata_args.as_slice())?;
