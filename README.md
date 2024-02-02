@@ -115,7 +115,7 @@ _Modal with expected date and time_
 
 ## UI/UX Designs
 
-Explore our UI/UX designs on [Figma](lhttps://www.figma.com/file/NwkvHLwU7u52LdxKg37x14/sky-trade?type=design&node-id=33-90&mode=design&t=LtQm2TN7Wlayb7ik-0).
+Explore our UI/UX designs on [Figma](https://www.figma.com/file/NwkvHLwU7u52LdxKg37x14/sky-trade?type=design&node-id=33-90&mode=design&t=LtQm2TN7Wlayb7ik-0).
 
 ## Other Component Repositories
 
@@ -123,7 +123,7 @@ Explore our UI/UX designs on [Figma](lhttps://www.figma.com/file/NwkvHLwU7u52Ldx
 - https://github.com/SkyTradeLinks/solana-rental
 - https://github.com/SkyTradeLinks/backend
 - https://github.com/SkyTradeLinks/admin_backend
-- https://github.com/SkyTradeLinks/solana-rental
+- https://github.com/SkyTradeLinks/admin_ui
 
 ## Acknowledgments
 
