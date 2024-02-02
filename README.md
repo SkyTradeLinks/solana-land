@@ -25,6 +25,7 @@ _Sequence Diagram of SkyTrade_
 - [Web3Auth](https://web3auth.io/)
 
 ## Core Components, Protocols, and Architecture
+
 ![Architecure Diagram](diagrams/architecture_diagram.png)
 
 _Architecure Diagram Diagram of Core Components_
@@ -119,9 +120,9 @@ Explore our UI/UX designs on [Figma](https://www.figma.com/file/NwkvHLwU7u52LdxK
 
 ## Other Component Repositories
 
-- https://github.com/SkyTradeLinks/address-claiming
+- https://github.com/SkyTradeLinks/address-claiming/tree/dev-deploy
 - https://github.com/SkyTradeLinks/solana-rental
-- https://github.com/SkyTradeLinks/backend
+- https://github.com/SkyTradeLinks/backend/tree/dev-deploy
 - https://github.com/SkyTradeLinks/admin_backend
 - https://github.com/SkyTradeLinks/admin_ui
 
