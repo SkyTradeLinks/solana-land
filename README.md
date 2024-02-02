@@ -62,7 +62,7 @@ This includes users claiming an airspace, and providing us with the necessary do
 Here is an overview of the User Interface for Registering An Airspace (click for full recording):
 
 <div>
-    <a href="https://www.loom.com/share/66a8175f270b48e48b634db7d0fe1427">
+    <a href="https://www.loom.com/share/66a8175f270b48e48b634db7d0fe1427" target="_blank">
         <img src="https://cdn.loom.com/sessions/thumbnails/66a8175f270b48e48b634db7d0fe1427-with-play.gif">
     </a>
 </div>
@@ -74,7 +74,7 @@ In this phase, once we have verified the airspace claim, we then proceed to mint
 Here is an overview of the minting process, as well as the admin UI (click for full recording):
 
 <div>
-    <a href="https://www.loom.com/share/debbe058aaec409fadce8d0bb3688f64">
+    <a href="https://www.loom.com/share/debbe058aaec409fadce8d0bb3688f64" target="_blank">
         <img src="https://cdn.loom.com/sessions/thumbnails/debbe058aaec409fadce8d0bb3688f64-with-play.gif">
     </a>
 </div>
@@ -86,7 +86,7 @@ Finally, drone operators then locate verified airspaces, and proceed to rent the
 Here is an overview of the UI for the minting process (click for full recording):
 
 <div>
-    <a href="https://www.loom.com/share/ef2fa9bc3d0f4c47851cabb4f12b1963">
+    <a href="https://www.loom.com/share/ef2fa9bc3d0f4c47851cabb4f12b1963" target="_blank">
         <img src="https://cdn.loom.com/sessions/thumbnails/ef2fa9bc3d0f4c47851cabb4f12b1963-with-play.gif">
     </a>
 </div>
