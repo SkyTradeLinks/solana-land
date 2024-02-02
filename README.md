@@ -111,4 +111,4 @@ Explore our UI/UX designs on [Figma](lhttps://www.figma.com/file/NwkvHLwU7u52Ldx
 
 ## Pitch Deck
 
-Check out our [Pitch Deck](link_to_pitch_deck.pdf) for detailed information about our project, goals, and current fundraising round.
+Check out our [Pitch Deck](https://docs.google.com/presentation/d/1noBhUjozHX6jM7-iJRwNcAG4YPRead07lQuHpTORFDc/edit) for detailed information about our project, goals, and current fundraising round.
