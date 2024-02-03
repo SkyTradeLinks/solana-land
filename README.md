@@ -59,7 +59,7 @@ We also ensure that landowners on our system are verifiable individuals. To achi
 ### Live Demo Instructions
 
 - Navigate to https://dev.sky.trade/ and sign up!
-- Either Claim An Airspace (Reach out to have your property whitelisted at m@sky.trade)
+- Either Claim An Airspace (Reach out to have your property whitelisted via email at m@sky.trade)
 - Or rent out already verified airspaces, namely
   - 1313 Riverside Ave Fort Collins CO
   - 10, Downing Street, Westminster, Covent Garden, London, Greater London, England, SW1A 2AA, United Kingdom
