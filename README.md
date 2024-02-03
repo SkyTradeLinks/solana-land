@@ -56,6 +56,16 @@ We also ensure that landowners on our system are verifiable individuals. To achi
 
 ## Demo
 
+### Live Demo Instructions
+
+- Navigate to https://dev.sky.trade/ and sign up!
+- Either Claim An Airspace (Reach out to have your property whitelisted at m@sky.trade)
+- Or rent out already verified airspaces, namely
+  - 1313 Riverside Ave Fort Collins CO
+  - 10, Downing Street, Westminster, Covent Garden, London, Greater London, England, SW1A 2AA, United Kingdom
+  - 50, California Street, Financial District, San Francisco, California, 94111, USA
+  - Chetla, Kolkata, Kolkata, West Bengal, India
+
 ### Airspace Registration
 
 This includes users claiming an airspace, and providing us with the necessary documents to support this claim. This is then reviewed further.
