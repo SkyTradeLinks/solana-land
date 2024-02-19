@@ -4,11 +4,8 @@ use anchor_lang::prelude::*;
 use mpl_bubblegum::{instructions::MintV1CpiBuilder, types::MetadataArgs};
 
 pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()> {
-
-    
-
     if ctx.accounts.data_account.authority_account != ctx.accounts.fee_payer.key() {
-    return err!(MyError::InvalidAuthority);
+        return err!(MyError::InvalidAuthority);
     }
 
     if ctx.accounts.data_account.merkle_tree_address != ctx.accounts.merkle_tree.key() {

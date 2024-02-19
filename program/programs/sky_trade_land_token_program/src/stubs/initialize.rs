@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 
 pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
     if ctx.accounts.data_account.initialized {
-        return err!(MyError::InvalidTreeAddressPassed);
+        return err!(MyError::AlreadyInitialized);
     }
 
     ctx.accounts.data_account.initialized = true;

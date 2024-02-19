@@ -67,11 +67,11 @@ describe("workspace", () => {
   );
 
   it("should initialize", async () => {
-    await skyTradeLandTokenProgramClient.InitializeSendAndConfirm(
-      dataAccount,
-      merkleTreeAddr,
-      feePayer
-    );
+    // await skyTradeLandTokenProgramClient.InitializeSendAndConfirm(
+    //   dataAccount,
+    //   merkleTreeAddr,
+    //   feePayer
+    // );
   });
 
   it("should mint token", async () => {

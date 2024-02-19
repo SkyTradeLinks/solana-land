@@ -14,6 +14,14 @@ export const loadKeyPair = (filename) => {
   return keyPair;
 };
 
+export const loadKeyPairV2 = (key) => {
+  const decodedKey = new Uint8Array(JSON.parse(key));
+
+  let keyPair = anchor.web3.Keypair.fromSecretKey(decodedKey);
+
+  return keyPair;
+};
+
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export const findLeafIndexFromUmiTx = (txInfo: TransactionWithMeta) => {
