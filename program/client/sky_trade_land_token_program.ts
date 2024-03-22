@@ -4,8 +4,10 @@ import { Program } from "@coral-xyz/anchor";
 import IDL from "../target/idl/sky_trade_land_token_program.json";
 import { SkyTradeLandTokenProgram } from "../target/types/sky_trade_land_token_program";
 const provider = anchor.AnchorProvider.env();
+
+// update to match program pubkey in lib.rs
 export const PROGRAM_PUBKEY = new anchor.web3.PublicKey(
-  "FvB6BeGReTqsGuiJU1TgN7cBPfVwQFmTLUx1wLmdEzCC"
+  ""
 );
 
 import {
