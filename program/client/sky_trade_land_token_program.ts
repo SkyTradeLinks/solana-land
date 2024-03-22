@@ -5,7 +5,7 @@ import IDL from "../target/idl/sky_trade_land_token_program.json";
 import { SkyTradeLandTokenProgram } from "../target/types/sky_trade_land_token_program";
 const provider = anchor.AnchorProvider.env();
 export const PROGRAM_PUBKEY = new anchor.web3.PublicKey(
-  "42GHMDntDvfvtArboFMRPj78jvTfBNr5Ce4FBpCZiyzM"
+  "FvB6BeGReTqsGuiJU1TgN7cBPfVwQFmTLUx1wLmdEzCC"
 );
 
 import {
@@ -13,6 +13,7 @@ import {
   SPL_NOOP_PROGRAM_ID,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
 } from "@metaplex-foundation/mpl-bubblegum";
+import { getPriorityFeeIx } from "../helper";
 
 const getProgram = (anchorProvider: anchor.AnchorProvider = provider) => {
   return new anchor.Program<SkyTradeLandTokenProgram>(
@@ -47,11 +48,8 @@ export const fetchData = (address: anchor.web3.PublicKey) => {
 export async function InitializeSendAndConfirm(
   data_account: anchor.web3.PublicKey,
   merkle_tree: anchor.web3.PublicKey,
-
-  fee_payer: anchor.web3.PublicKey | anchor.web3.Keypair
+  fee_payer: anchor.web3.Keypair
 ) {
-  const initializeSigners = [fee_payer];
-
   const initializeAccountInputs = {
     dataAccount: data_account,
     merkleTree: merkle_tree,
@@ -59,18 +57,30 @@ export async function InitializeSendAndConfirm(
     feePayer: toPubkey(fee_payer),
   };
 
-  const initializesignerKeypairs = initializeSigners.filter(
-    (signer): signer is anchor.web3.Keypair =>
-      signer instanceof anchor.web3.Keypair
-  );
+  let priorityIx = await getPriorityFeeIx(provider.connection);
 
-  const initializeBuilder = program.methods
+  let ix = await program.methods
     .initialize()
-    .accounts(initializeAccountInputs);
-  if (initializesignerKeypairs.length > 0) {
-    initializeBuilder.signers(initializesignerKeypairs);
+    .accounts(initializeAccountInputs)
+    .instruction();
+
+  let tx = new anchor.web3.Transaction();
+
+  tx.add(priorityIx);
+  tx.add(ix);
+
+  tx.recentBlockhash = await (
+    await provider.connection.getLatestBlockhash()
+  ).blockhash;
+
+  tx.feePayer = initializeAccountInputs.feePayer;
+  tx.sign(fee_payer);
+
+  try {
+    let sx = await provider.connection.sendRawTransaction(tx.serialize());
+  } catch (err) {
+    console.log(err);
   }
-  return initializeBuilder.rpc();
 }
 
 export function Initialize(

@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { loadKeyPairV2 } from "../helper";
+import { loadKeyPair } from "../helper";
 import { Connection } from "@solana/web3.js";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import {
@@ -11,18 +11,16 @@ import {
   publicKey,
   signerIdentity,
 } from "@metaplex-foundation/umi";
+import "dotenv/config";
+
 import * as skyTradeLandTokenProgramClient from "../client/sky_trade_land_token_program";
 
 (async () => {
   // input private key here
-  let centralizedAccount = loadKeyPairV2("");
+  let centralizedAccount = loadKeyPair(process.env.ANCHOR_WALLET);
 
-  const wallet = new anchor.Wallet(centralizedAccount);
+  const provider = anchor.AnchorProvider.env();
 
-  // input connection uri (mainnet)
-  const connection = new Connection("");
-
-  const provider = new anchor.AnchorProvider(connection, wallet, {});
   anchor.setProvider(provider);
 
   // setup umi
@@ -36,11 +34,9 @@ import * as skyTradeLandTokenProgramClient from "../client/sky_trade_land_token_
   umi.use(signerIdentity(authoritySigner));
 
   // land merkle tree address
-  const merkleTreeAddr = new anchor.web3.PublicKey("");
+  const landMerkleTree = loadKeyPair(process.env.LAND_MERKLE_TREE);
 
-  const treeConfig = findTreeConfigPda(umi, {
-    merkleTree: publicKey(merkleTreeAddr),
-  })[0];
+  const merkleTreeAddr = landMerkleTree.publicKey;
 
   const dataAccount = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("data_account")],

@@ -3,6 +3,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { TransactionWithMeta } from "@metaplex-foundation/umi";
 import { SPL_NOOP_PROGRAM_ID } from "@metaplex-foundation/mpl-bubblegum";
 import { deserializeChangeLogEventV1 } from "@solana/spl-account-compression";
+import { ComputeBudgetProgram } from "@solana/web3.js";
 
 export const loadKeyPair = (filename) => {
   const decodedKey = new Uint8Array(
@@ -51,4 +52,17 @@ export const findLeafIndexFromUmiTx = (txInfo: TransactionWithMeta) => {
 
   //
   return leafIndex;
+};
+
+export const getPriorityFeeIx = async (connection: anchor.web3.Connection) => {
+  let fees = await connection.getRecentPrioritizationFees();
+  let maxPrioritizationFee = fees.reduce((max, cur) => {
+    return cur.prioritizationFee > max.prioritizationFee ? cur : max;
+  }, fees[0]);
+
+  const PRIORITY_FEE_IX = ComputeBudgetProgram.setComputeUnitPrice({
+    microLamports: maxPrioritizationFee.prioritizationFee,
+  });
+
+  return PRIORITY_FEE_IX;
 };
