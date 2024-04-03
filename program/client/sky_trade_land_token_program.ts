@@ -7,7 +7,7 @@ const provider = anchor.AnchorProvider.env();
 
 // update to match program pubkey in lib.rs
 export const PROGRAM_PUBKEY = new anchor.web3.PublicKey(
-  ""
+  "42GHMDntDvfvtArboFMRPj78jvTfBNr5Ce4FBpCZiyzM"
 );
 
 import {
@@ -16,6 +16,13 @@ import {
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
 } from "@metaplex-foundation/mpl-bubblegum";
 import { getPriorityFeeIx } from "../helper";
+import { PublicKey } from "@solana/web3.js";
+import {
+  findMetadataPda,
+  findMasterEditionPda,
+  MPL_TOKEN_METADATA_PROGRAM_ID,
+} from "@metaplex-foundation/mpl-token-metadata";
+import { Umi, publicKey } from "@metaplex-foundation/umi";
 
 const getProgram = (anchorProvider: anchor.AnchorProvider = provider) => {
   return new anchor.Program<SkyTradeLandTokenProgram>(
@@ -105,14 +112,32 @@ export function Initialize(
 }
 
 export async function MintTokenSendAndConfirm(
+  umi: Umi,
   metadata_args: Buffer,
   data_account: anchor.web3.PublicKey,
   merkle_tree: anchor.web3.PublicKey,
   recipient: anchor.web3.PublicKey,
   tree_config: anchor.web3.PublicKey,
+  collectionMint: anchor.web3.PublicKey,
   fee_payer: anchor.web3.PublicKey | anchor.web3.Keypair
 ) {
   const mintTokenSigners = [fee_payer];
+
+
+
+  let [collectionMetadata] = findMetadataPda(umi, {
+    mint: publicKey(collectionMint),
+  });
+
+  let [collectionEdition] = findMasterEditionPda(umi, {
+    mint: publicKey(collectionMint),
+  });
+
+  const [bubblegumSigner] = PublicKey.findProgramAddressSync(
+    // `collection_cpi` is a custom prefix required by the Bubblegum program
+    [Buffer.from("collection_cpi", "utf8")],
+    new PublicKey(MPL_BUBBLEGUM_PROGRAM_ID)
+  );
 
   const mintTokenAccountInputs = {
     dataAccount: data_account,
@@ -124,6 +149,11 @@ export async function MintTokenSendAndConfirm(
     compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
     feePayer: toPubkey(fee_payer),
     systemProgram: anchor.web3.SystemProgram.programId,
+    collectionMint,
+    collectionMetadata,
+    collectionEdition,
+    bubblegumSigner,
+    tokenMetadataProgram: MPL_TOKEN_METADATA_PROGRAM_ID,
   };
 
   const mintTokensignerKeypairs = mintTokenSigners.filter(

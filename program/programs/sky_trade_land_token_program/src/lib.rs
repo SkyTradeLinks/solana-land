@@ -68,6 +68,22 @@ pub mod sky_trade_land_token_program {
 
         /// CHECK: system_program requires an account info
         pub system_program: Program<'info, System>,
+
+        /// CHECK: This account is checked in the instruction
+        pub collection_mint: UncheckedAccount<'info>,
+
+        #[account(mut)]
+        /// CHECK: This account is checked in the instruction
+        pub collection_metadata: UncheckedAccount<'info>,
+
+        /// CHECK: This account is checked in the instruction
+        pub collection_edition: UncheckedAccount<'info>,
+
+        /// CHECK: used to sign creation
+        pub bubblegum_signer: UncheckedAccount<'info>,
+
+        /// CHECK: This account is checked in the instruction
+        pub token_metadata_program: UncheckedAccount<'info>,
     }
 }
 

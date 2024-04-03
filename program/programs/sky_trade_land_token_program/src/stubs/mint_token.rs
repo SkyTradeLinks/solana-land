@@ -1,7 +1,10 @@
 #![allow(unused)]
 use crate::*;
 use anchor_lang::prelude::*;
-use mpl_bubblegum::{instructions::MintV1CpiBuilder, types::MetadataArgs};
+use mpl_bubblegum::{
+    instructions::{MintToCollectionV1CpiBuilder, MintV1CpiBuilder},
+    types::MetadataArgs,
+};
 
 pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()> {
     if ctx.accounts.data_account.authority_account != ctx.accounts.fee_payer.key() {
@@ -14,7 +17,7 @@ pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()>
 
     let mint_metadata = MetadataArgs::try_from_slice(metadata_args.as_slice())?;
 
-    MintV1CpiBuilder::new(&ctx.accounts.bubblegum_program.to_account_info())
+    MintToCollectionV1CpiBuilder::new(&ctx.accounts.bubblegum_program.to_account_info())
         .tree_config(&ctx.accounts.tree_config.to_account_info())
         .leaf_owner(&ctx.accounts.recipient.to_account_info())
         .leaf_delegate(&ctx.accounts.fee_payer.to_account_info())
@@ -24,6 +27,12 @@ pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()>
         .log_wrapper(&ctx.accounts.log_wrapper.to_account_info())
         .compression_program(&ctx.accounts.compression_program.to_account_info())
         .system_program(&ctx.accounts.system_program.to_account_info())
+        .collection_authority(&ctx.accounts.fee_payer.to_account_info())
+        .collection_mint(&ctx.accounts.collection_mint.to_account_info())
+        .collection_metadata(&ctx.accounts.collection_metadata.to_account_info())
+        .collection_edition(&ctx.accounts.collection_edition.to_account_info())
+        .bubblegum_signer(&ctx.accounts.bubblegum_signer.to_account_info())
+        .token_metadata_program(&ctx.accounts.token_metadata_program.to_account_info())
         .metadata(mint_metadata)
         .invoke()?;
 

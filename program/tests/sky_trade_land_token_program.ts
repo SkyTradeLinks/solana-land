@@ -25,6 +25,7 @@ import {
 } from "@metaplex-foundation/mpl-bubblegum";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { decode } from "@coral-xyz/anchor/dist/cjs/utils/bytes/bs58";
+import { PublicKey } from "@solana/web3.js";
 
 chai.use(chaiAsPromised);
 
@@ -75,27 +76,35 @@ describe("workspace", () => {
   });
 
   it("should mint token", async () => {
+    const collectionMint = new PublicKey(
+      "6gTxdXSgqXQDvBvtstxhD1ysjXWtBBhkdZjdrPMrh7TK"
+  );
+
     const metadata_args = getMetadataArgsSerializer().serialize({
       name: "Land NFT",
       symbol: "",
       uri: "",
-      creators: [],
+      creators: [
+        { address: umi.identity.publicKey, verified: true, share: 100 },
+      ],
       sellerFeeBasisPoints: 0,
       primarySaleHappened: false,
       isMutable: true,
       editionNonce: null,
       uses: null,
-      collection: null,
+      collection: { key: publicKey(collectionMint), verified: true },
       tokenProgramVersion: TokenProgramVersion.Original,
       tokenStandard: TokenStandard.NonFungible,
     });
 
     const mintSx = await skyTradeLandTokenProgramClient.MintTokenSendAndConfirm(
+      umi,
       Buffer.from(metadata_args),
       dataAccount,
       merkleTreeAddr,
       recipient,
       new anchor.web3.PublicKey(treeConfig),
+      collectionMint,
       feePayer
     );
 
@@ -109,7 +118,6 @@ describe("workspace", () => {
       });
 
       if (tx0 !== null) {
-
         mintTxInfo = tx0;
         break;
       }
