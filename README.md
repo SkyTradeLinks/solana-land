@@ -143,7 +143,6 @@ Explore our UI/UX designs on [Figma](https://www.figma.com/file/NwkvHLwU7u52LdxK
 - [Sayantan Modal](https://www.linkedin.com/in/sayantan-mondal-1693101b4/)
 - [Yusuff Jamal](https://www.linkedin.com/in/jamal-yusuff-1a4aa1212/)
 - [Glwadys Fayolle](https://www.linkedin.com/in/glwadysfayolle/)
-- [Peter Akech](https://www.linkedin.com/in/peter-akech-2a777417/)
 
 ## Pitch Deck
 
