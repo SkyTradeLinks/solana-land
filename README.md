@@ -19,8 +19,6 @@ _Sequence Diagram of SkyTrade_
 - [PostgreSQL](https://postgresql.org/)
 - [Solana](https://solana.com/)
 - [Anchor](https://www.anchor-lang.com/)
-- [Codigo.ai](https://www.codigo.ai/)
-- [Solana FM](https://solana.fm/)
 - [Ironforge](https://www.ironforge.cloud/)
 - [Web3Auth](https://web3auth.io/)
 
