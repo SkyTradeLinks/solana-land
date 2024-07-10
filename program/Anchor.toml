@@ -10,7 +10,7 @@ url = "https://api.apr.dev"
 
 [provider]
 # cluster = "Localnet"
-cluster = "https://devnet.helius-rpc.com/?api-key=887524e6-92b0-4f96-973c-b37a53a9cfe4"
+cluster = "https://boldest-wandering-moon.solana-devnet.quiknode.pro/e9af7ce40b11247cb6f6568aa2e886abf5dc4ef4/"
 wallet = "/home/erenaspire7/.config/solana/id.json"
 
 [scripts]
