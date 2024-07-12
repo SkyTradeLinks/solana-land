@@ -50,13 +50,13 @@ describe('workspace', () => {
   )[0];
 
   const merkleTreeAddr = new anchor.web3.PublicKey(
-    'GGA6j4W7Nh3KeLNSFjSYX4y5hoLJBSk3cXhFsjB9R7mf'
+    'BQi6mDUZVwJvSV3PcWHTVFtP5jRgFDPNrqnTJYhv5c6B'
   );
 
   const feePayer = loadKeyPair('./wallets/id.json');
   const collection = loadKeyPair('./wallets/collection.json');
   const recipient = new anchor.web3.PublicKey(
-    '9ED3Y2nqwg4GoXvxeEAWNmeMvnNqT5vxpNaqSmRJFdRD'
+    '73ajJBDet2TbccHesc1CgHcMbDG83fafiy5iP3iGCEYL'
   );
 
   const umi = createUmi(provider.connection.rpcEndpoint)
