@@ -2,6 +2,9 @@
 [features]
 seeds = false
 skip-lint = false
+idl-build = ["anchor-lang/idl-build"]
+
+
 [programs.localnet]
 workspace = "42GHMDntDvfvtArboFMRPj78jvTfBNr5Ce4FBpCZiyzM"
 
@@ -9,7 +12,6 @@ workspace = "42GHMDntDvfvtArboFMRPj78jvTfBNr5Ce4FBpCZiyzM"
 url = "https://api.apr.dev"
 
 [provider]
-# cluster = "Localnet"
 cluster = "https://devnet.helius-rpc.com/?api-key=887524e6-92b0-4f96-973c-b37a53a9cfe4"
 wallet = "/home/erenaspire7/.config/solana/id.json"
 

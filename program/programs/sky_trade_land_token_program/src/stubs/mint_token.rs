@@ -20,7 +20,7 @@ pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()>
     MintToCollectionV1CpiBuilder::new(&ctx.accounts.bubblegum_program.to_account_info())
         .tree_config(&ctx.accounts.tree_config.to_account_info())
         .leaf_owner(&ctx.accounts.recipient.to_account_info())
-        .leaf_delegate(&ctx.accounts.fee_payer.to_account_info())
+        .leaf_delegate(&ctx.accounts.recipient.to_account_info())
         .merkle_tree(&ctx.accounts.merkle_tree.to_account_info())
         .payer(&ctx.accounts.fee_payer.to_account_info())
         .tree_creator_or_delegate(&ctx.accounts.fee_payer.to_account_info())

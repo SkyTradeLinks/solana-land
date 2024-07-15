@@ -1,35 +1,31 @@
-import * as anchor from "@coral-xyz/anchor";
+import * as anchor from '@coral-xyz/anchor';
 
-import { Program } from "@coral-xyz/anchor";
-import IDL from "../target/idl/sky_trade_land_token_program.json";
-import { SkyTradeLandTokenProgram } from "../target/types/sky_trade_land_token_program";
+import { Program } from '@coral-xyz/anchor';
+import IDL from '../target/idl/sky_trade_land_token_program.json';
+import { SkyTradeLandTokenProgram } from '../target/types/sky_trade_land_token_program';
 const provider = anchor.AnchorProvider.env();
 
 // update to match program pubkey in lib.rs
 export const PROGRAM_PUBKEY = new anchor.web3.PublicKey(
-  "42GHMDntDvfvtArboFMRPj78jvTfBNr5Ce4FBpCZiyzM"
+  '2NFzsTELGrwXnk32igsruoVF6h4tUH4dLsnHNQfFvEDc'
 );
 
 import {
   MPL_BUBBLEGUM_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-} from "@metaplex-foundation/mpl-bubblegum";
-import { getPriorityFeeIx } from "../helper";
-import { PublicKey } from "@solana/web3.js";
+} from '@metaplex-foundation/mpl-bubblegum';
+import { getPriorityFeeIx } from '../helper';
+import { PublicKey } from '@solana/web3.js';
 import {
   findMetadataPda,
   findMasterEditionPda,
   MPL_TOKEN_METADATA_PROGRAM_ID,
-} from "@metaplex-foundation/mpl-token-metadata";
-import { Umi, publicKey } from "@metaplex-foundation/umi";
+} from '@metaplex-foundation/mpl-token-metadata';
+import { Umi, publicKey } from '@metaplex-foundation/umi';
 
 const getProgram = (anchorProvider: anchor.AnchorProvider = provider) => {
-  return new anchor.Program<SkyTradeLandTokenProgram>(
-    IDL as any,
-    PROGRAM_PUBKEY,
-    provider
-  );
+  return new anchor.Program<SkyTradeLandTokenProgram>(IDL as any, provider);
 };
 
 const toPubkey = (
@@ -44,7 +40,7 @@ export const program = getProgram();
 
 export const deriveData = (): anchor.web3.PublicKey => {
   const [pubkey, bump] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("data_account")],
+    [Buffer.from('data_account')],
     PROGRAM_PUBKEY
   );
   return pubkey;
@@ -113,6 +109,7 @@ export function Initialize(
 
 export async function MintTokenSendAndConfirm(
   umi: Umi,
+
   metadata_args: Buffer,
   data_account: anchor.web3.PublicKey,
   merkle_tree: anchor.web3.PublicKey,
@@ -122,8 +119,6 @@ export async function MintTokenSendAndConfirm(
   fee_payer: anchor.web3.PublicKey | anchor.web3.Keypair
 ) {
   const mintTokenSigners = [fee_payer];
-
-
 
   let [collectionMetadata] = findMetadataPda(umi, {
     mint: publicKey(collectionMint),
@@ -135,7 +130,7 @@ export async function MintTokenSendAndConfirm(
 
   const [bubblegumSigner] = PublicKey.findProgramAddressSync(
     // `collection_cpi` is a custom prefix required by the Bubblegum program
-    [Buffer.from("collection_cpi", "utf8")],
+    [Buffer.from('collection_cpi', 'utf8')],
     new PublicKey(MPL_BUBBLEGUM_PROGRAM_ID)
   );
 

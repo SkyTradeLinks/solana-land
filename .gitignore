@@ -7,5 +7,7 @@ node_modules
 test-ledger
 .yarn
 
-
+/wallets/
 **/wallets
+
+**/.env
