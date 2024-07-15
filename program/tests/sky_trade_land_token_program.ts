@@ -53,8 +53,10 @@ describe('workspace', () => {
     'BQi6mDUZVwJvSV3PcWHTVFtP5jRgFDPNrqnTJYhv5c6B'
   );
 
-  const feePayer = loadKeyPair('./wallets/id.json');
-  const collection = loadKeyPair('./wallets/collection.json');
+  const feePayer = loadKeyPair(
+    join(__dirname, 'wallets', 'centralizedAccount.json')
+  );
+  const collection = loadKeyPair('../wallets/collection.json');
   const recipient = new anchor.web3.PublicKey(
     '73ajJBDet2TbccHesc1CgHcMbDG83fafiy5iP3iGCEYL'
   );

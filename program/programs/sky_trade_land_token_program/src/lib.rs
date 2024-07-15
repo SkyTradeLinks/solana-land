@@ -6,7 +6,7 @@ pub use stubs::*;
 pub mod state;
 pub use state::*;
 
-declare_id!("2NFzsTELGrwXnk32igsruoVF6h4tUH4dLsnHNQfFvEDc");
+declare_id!("42GHMDntDvfvtArboFMRPj78jvTfBNr5Ce4FBpCZiyzM");
 
 #[program]
 pub mod sky_trade_land_token_program {

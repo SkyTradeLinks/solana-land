@@ -6,8 +6,10 @@ import {
   createTree,
   findTreeConfigPda,
   mplBubblegum,
+  fetchMerkleTree,
 } from '@metaplex-foundation/mpl-bubblegum';
 import {
+  AccountNotFoundError,
   createSignerFromKeypair,
   publicKey,
   signerIdentity,
@@ -43,28 +45,38 @@ import { dasApi } from '@metaplex-foundation/digital-asset-standard-api';
 
   // land merkle tree address
   const landMerkleTree = loadKeyPair(process.env.LAND_MERKLE_TREE);
-  let merkleSigner = createSignerFromKeypair(umi, {
-    secretKey: landMerkleTree.secretKey,
-    publicKey: publicKey(landMerkleTree.publicKey),
-  });
   const maxDepthSizePair: ValidDepthSizePair = {
     maxDepth: 14,
     maxBufferSize: 64,
   };
   const canopyDepth = maxDepthSizePair.maxDepth - 5;
-  const treeTx = await createTree(umi, {
-    merkleTree: merkleSigner,
-    ...maxDepthSizePair,
-    canopyDepth,
-  });
-  const { blockhash, lastValidBlockHeight } =
-    await umi.rpc.getLatestBlockhash();
-  await treeTx.sendAndConfirm(umi, {
-    send: { commitment: 'finalized' },
-    confirm: {
-      strategy: { type: 'blockhash', blockhash, lastValidBlockHeight },
-    },
-  });
+  // check creation of land merkle tree
+  try {
+    await fetchMerkleTree(umi, publicKey(landMerkleTree.publicKey));
+  } catch (err) {
+    if (err.name == AccountNotFoundError.name) {
+      const { blockhash, lastValidBlockHeight } =
+        await umi.rpc.getLatestBlockhash();
+      await (
+        await createTree(umi, {
+          merkleTree: createSignerFromKeypair(umi, {
+            secretKey: landMerkleTree.secretKey,
+            publicKey: publicKey(landMerkleTree.publicKey),
+          }),
+          ...maxDepthSizePair,
+          canopyDepth,
+        })
+      ).sendAndConfirm(umi, {
+        send: { commitment: 'finalized' },
+        confirm: {
+          strategy: { type: 'blockhash', blockhash, lastValidBlockHeight },
+        },
+      });
+    } else {
+      throw err;
+    }
+  }
+
   const merkleTreeAddr = landMerkleTree.publicKey;
 
   const dataAccount = anchor.web3.PublicKey.findProgramAddressSync(
