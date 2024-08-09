@@ -11,10 +11,6 @@ pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()>
         return err!(MyError::InvalidAuthority);
     }
 
-    if ctx.accounts.data_account.merkle_tree_address != ctx.accounts.merkle_tree.key() {
-        return err!(MyError::InvalidTreeAddressPassed);
-    }
-
     let mint_metadata = MetadataArgs::try_from_slice(metadata_args.as_slice())?;
 
     MintToCollectionV1CpiBuilder::new(&ctx.accounts.bubblegum_program.to_account_info())
