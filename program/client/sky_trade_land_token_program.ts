@@ -7,7 +7,7 @@ const provider = anchor.AnchorProvider.env();
 
 // update to match program pubkey in lib.rs
 export const PROGRAM_PUBKEY = new anchor.web3.PublicKey(
-  '2NFzsTELGrwXnk32igsruoVF6h4tUH4dLsnHNQfFvEDc'
+  "57Ubxrgvg5ju9Dhk6UUm76jVyrACJqwtxLPhkEaVHzrQ"
 );
 
 import {
@@ -83,6 +83,7 @@ export async function InitializeSendAndConfirm(
 
   try {
     let sx = await provider.connection.sendRawTransaction(tx.serialize());
+    console.log("sx", sx)
   } catch (err) {
     console.log(err);
   }

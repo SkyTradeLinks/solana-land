@@ -1,12 +1,11 @@
 #![allow(unused)]
 use anchor_lang::prelude::*;
 use std::str::FromStr;
-pub mod stubs;
-pub use stubs::*;
 pub mod state;
+pub mod stubs;
 pub use state::*;
 
-declare_id!("42GHMDntDvfvtArboFMRPj78jvTfBNr5Ce4FBpCZiyzM");
+declare_id!("57Ubxrgvg5ju9Dhk6UUm76jVyrACJqwtxLPhkEaVHzrQ");
 
 #[program]
 pub mod sky_trade_land_token_program {
@@ -94,7 +93,4 @@ pub enum MyError {
 
     #[msg("Invalid authority provided!")]
     InvalidAuthority,
-
-    #[msg("Provided Tree Address is invalid")]
-    InvalidTreeAddressPassed,
 }
