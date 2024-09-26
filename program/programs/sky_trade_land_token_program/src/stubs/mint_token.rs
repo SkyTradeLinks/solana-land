@@ -13,6 +13,24 @@ pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()>
 
     let mint_metadata = MetadataArgs::try_from_slice(metadata_args.as_slice())?;
 
+    // Check received creators against the accountInfos
+    const TOTAL_CREATORS: usize = 3;
+    require_eq!(
+        mint_metadata.creators.len(),
+        TOTAL_CREATORS,
+        MyError::InvalidCreatorsAmount
+    );
+    require_keys_eq!(
+        mint_metadata.creators[1].address,
+        ctx.accounts.mint_creator.key(),
+        MyError::InvalidCreator
+    );
+    require_keys_eq!(
+        mint_metadata.creators[2].address,
+        ctx.accounts.verification_creator.key(),
+        MyError::InvalidCreator
+    );
+
     MintToCollectionV1CpiBuilder::new(&ctx.accounts.bubblegum_program.to_account_info())
         .tree_config(&ctx.accounts.tree_config.to_account_info())
         .leaf_owner(&ctx.accounts.recipient.to_account_info())
@@ -30,7 +48,12 @@ pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()>
         .bubblegum_signer(&ctx.accounts.bubblegum_signer.to_account_info())
         .token_metadata_program(&ctx.accounts.token_metadata_program.to_account_info())
         .metadata(mint_metadata)
-        .invoke()?;
+        .add_remaining_account(&ctx.accounts.mint_creator, true, true)
+        .add_remaining_account(&ctx.accounts.verification_creator, true, true)
+        .invoke_signed(&[
+            &MintCreator::get_signer_seeds(&[ctx.bumps.mint_creator]),
+            &VerificationCreator::get_signer_seeds(&[ctx.bumps.verification_creator]),
+        ])?;
 
     Ok(())
 }
