@@ -1,10 +1,72 @@
 #![allow(unused)]
+use std::mem::size_of;
+
 use crate::*;
 use anchor_lang::prelude::*;
 use mpl_bubblegum::{
     instructions::{MintToCollectionV1CpiBuilder, MintV1CpiBuilder},
     types::MetadataArgs,
 };
+
+#[derive(Accounts)]
+#[instruction(metadata_args:Vec<u8>)]
+pub struct MintToken<'info> {
+    /// CHECK: fee_payer requires an account info
+    #[account(mut, signer)]
+    pub fee_payer: AccountInfo<'info>,
+
+    #[account(mut, seeds = [b"data_account"], bump)]
+    pub data_account: Account<'info, Data>,
+
+    /// CHECK: merkle_tree requires an account info
+    #[account(mut)]
+    pub merkle_tree: AccountInfo<'info>,
+
+    /// CHECK: recipient requires an account info
+    pub recipient: AccountInfo<'info>,
+
+    /// CHECK: tree_config requires an account info
+    #[account(mut)]
+    pub tree_config: AccountInfo<'info>,
+
+    /// CHECK: bubblegum_program requires an account info
+    pub bubblegum_program: AccountInfo<'info>,
+
+    /// CHECK: log_wrapper requires an account info
+    pub log_wrapper: AccountInfo<'info>,
+
+    /// CHECK: compression_program requires an account info
+    pub compression_program: AccountInfo<'info>,
+
+    /// CHECK: system_program requires an account info
+    pub system_program: Program<'info, System>,
+
+    /// CHECK: This account is checked in the instruction
+    pub collection_mint: UncheckedAccount<'info>,
+
+    #[account(mut)]
+    /// CHECK: This account is checked in the instruction
+    pub collection_metadata: UncheckedAccount<'info>,
+
+    /// CHECK: This account is checked in the instruction
+    pub collection_edition: UncheckedAccount<'info>,
+
+    /// CHECK: used to sign creation
+    pub bubblegum_signer: UncheckedAccount<'info>,
+
+    /// CHECK: This account is checked in the instruction
+    pub token_metadata_program: UncheckedAccount<'info>,
+
+    /// CHECK: checked by seeds and in IX body
+    // TODO!: remove mut once MPL bug is fixed
+    #[account(mut, seeds = [b"mint_creator"], bump)]
+    pub mint_creator: AccountInfo<'info>,
+
+    /// CHECK: checked by seeds and in IX body
+    // TODO!: remove mut once MPL bug is fixed
+    #[account(mut, seeds = [b"verification_creator"], bump)]
+    pub verification_creator: AccountInfo<'info>,
+}
 
 pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()> {
     if ctx.accounts.data_account.authority_account != ctx.accounts.fee_payer.key() {
