@@ -6,6 +6,7 @@ import {
 import { publicKey } from "@metaplex-foundation/umi";
 
 import { mintTokenUnverified } from "../ix_helpers/mintTokenUnverified";
+import { Keypair } from "@solana/web3.js";
 
 export const mintTokenUnverifiedTest = async (
   initialSetupData: InitialSetupData
@@ -30,7 +31,13 @@ export const mintTokenUnverifiedTest = async (
     tokenStandard: TokenStandard.NonFungible,
   };
 
-  const { assetId } = await mintTokenUnverified(initialSetupData, metadataArgs);
+  const propertyOwnerUserWallet = Keypair.generate().publicKey;
+
+  const { assetId } = await mintTokenUnverified(
+    initialSetupData,
+    metadataArgs,
+    propertyOwnerUserWallet
+  );
 
   console.log("assetId: ", assetId.toBase58());
 };

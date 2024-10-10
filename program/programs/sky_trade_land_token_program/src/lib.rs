@@ -10,7 +10,7 @@ use stubs::*;
 
 use utils::mpl::AnchorUpdateMetadataInstructionArgs;
 
-declare_id!("5Tpq8QDMghkm9MHrLMKd8ib2JLXU3YdXYxy2xJb4639c");
+declare_id!("CcVHhHtZgD8CNn1quEBmbuqx84s3yRRahvSwefDxwEnw");
 
 #[program]
 pub mod sky_trade_land_token_program {
@@ -55,4 +55,10 @@ pub enum MyError {
 
     #[msg("Invalid creator!")]
     InvalidCreator,
+
+    #[msg("InvalidAssetId!")]
+    InvalidAssetId,
+
+    #[msg("GenericError!")]
+    GenericError,
 }

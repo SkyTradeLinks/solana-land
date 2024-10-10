@@ -84,6 +84,15 @@ export const addVerificationCreator = async (
     isMutable: null,
   };
 
+  const [unverifiedTokenHolder] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("unverified_token_holder", "utf8"),
+      recipient.toBytes(),
+      assetId.toBytes(),
+    ],
+    program.programId
+  );
+
   const ix = await program.methods
     .addVerificationCreator({
       root: metadata.root,
@@ -107,6 +116,8 @@ export const addVerificationCreator = async (
       tokenMetadataProgram: MPL_TOKEN_METADATA_PROGRAM_ID,
       mintCreator,
       verificationCreator,
+      assetId,
+      unverifiedTokenHolder,
     })
     // We only need to sign with wallet (current `Data.authority_account`) because the collection auth
     //  and the tree creator are set to this same pubkey

@@ -40,7 +40,8 @@ export const addVerificationCreatorTest = async (
   // Mint the unverified token
   const { assetId } = await mintTokenUnverified(
     initialSetupData,
-    initialMetadata
+    initialMetadata,
+    recipient.publicKey
   );
 
   // Verify the token and transfer it to the user
