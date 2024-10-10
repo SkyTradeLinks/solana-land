@@ -1,10 +1,11 @@
-use anchor_lang::prelude::*;
+use anchor_lang::{prelude::*, solana_program::program::get_return_data};
 use mpl_bubblegum::{
     instructions::{MintToCollectionV1CpiBuilder, MintV1CpiBuilder},
-    types::MetadataArgs,
+    types::{LeafSchema, MetadataArgs},
+    LeafSchemaEvent, ID,
 };
 
-use crate::{Data, MintCreator, MyError};
+use crate::{Data, LeafSchemaMpl, MintCreator, MyError};
 
 #[derive(Accounts)]
 pub struct MintTokenUnverified<'info> {
@@ -55,6 +56,47 @@ pub struct MintTokenUnverified<'info> {
     // TODO!: remove mut once MPL bug is fixed
     #[account(mut, seeds = [b"mint_creator"], bump)]
     pub mint_creator: AccountInfo<'info>,
+
+    /// CHECK: Only used as a seed for the `unverified_token_holder` account
+    pub property_owner_user_wallet: UncheckedAccount<'info>,
+    /// CHECK: Only used as a seed for the `unverified_token_holder` account
+    pub asset_id: UncheckedAccount<'info>,
+    /// CHECK: checked by seeds and in IX body
+    #[account(
+        seeds = [
+            b"unverified_token_holder",
+            property_owner_user_wallet.key().as_ref(),
+            asset_id.key().as_ref(),
+        ],
+        bump
+    )]
+    pub unverified_token_holder: AccountInfo<'info>,
+}
+
+impl<'info> MintTokenUnverified<'info> {
+    /// Checks that the created asset_id in CPI matches the one received
+    ///  to be used as a seed for the [`unverified_token_holder`] account
+    pub fn validate_asset_id(&self) -> Result<()> {
+        let leaf_data = match get_return_data() {
+            Some((program_id, cpi_data)) => {
+                require_keys_eq!(
+                    program_id,
+                    self.bubblegum_program.key(),
+                    MyError::InvalidAssetId
+                );
+                LeafSchemaMpl::try_from_slice(&cpi_data)?
+            }
+            None => return err!(MyError::InvalidAssetId),
+        };
+
+        match leaf_data {
+            LeafSchemaMpl::V1 { id, .. } => {
+                require_keys_eq!(id, self.asset_id.key(), MyError::InvalidAssetId)
+            }
+        }
+
+        Ok(())
+    }
 }
 
 pub fn mint_token_unverified_handler(
@@ -82,8 +124,8 @@ pub fn mint_token_unverified_handler(
 
     MintToCollectionV1CpiBuilder::new(&ctx.accounts.bubblegum_program.to_account_info())
         .tree_config(&ctx.accounts.tree_config.to_account_info())
-        .leaf_owner(&ctx.accounts.fee_payer.to_account_info())
-        .leaf_delegate(&ctx.accounts.fee_payer.to_account_info())
+        .leaf_owner(&ctx.accounts.unverified_token_holder.to_account_info())
+        .leaf_delegate(&ctx.accounts.unverified_token_holder.to_account_info())
         .merkle_tree(&ctx.accounts.merkle_tree.to_account_info())
         .payer(&ctx.accounts.fee_payer.to_account_info())
         .tree_creator_or_delegate(&ctx.accounts.fee_payer.to_account_info())
@@ -99,6 +141,8 @@ pub fn mint_token_unverified_handler(
         .metadata(mint_metadata)
         .add_remaining_account(&ctx.accounts.mint_creator, true, true)
         .invoke_signed(&[&MintCreator::get_signer_seeds(&[ctx.bumps.mint_creator])])?;
+
+    ctx.accounts.validate_asset_id()?;
 
     Ok(())
 }

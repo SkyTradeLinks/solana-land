@@ -9,9 +9,13 @@ use mpl_bubblegum::{
         VerifyCreatorCpiAccounts, VerifyCreatorInstructionArgs,
     },
     types::MetadataArgs,
+    utils::get_asset_id,
 };
 
-use crate::{utils::mpl::AnchorUpdateMetadataInstructionArgs, Data, MyError, VerificationCreator};
+use crate::{
+    utils::mpl::AnchorUpdateMetadataInstructionArgs, Data, MyError, UnverifiedTokenHolder,
+    VerificationCreator,
+};
 
 #[derive(Accounts)]
 pub struct AddVerificationCreator<'info> {
@@ -67,6 +71,20 @@ pub struct AddVerificationCreator<'info> {
     // TODO!: remove mut once MPL bug is fixed
     #[account(mut, seeds = [b"verification_creator"], bump)]
     pub verification_creator: AccountInfo<'info>,
+
+    /// CHECK: Only used as a seed for the `unverified_token_holder` account
+    pub asset_id: UncheckedAccount<'info>,
+
+    /// CHECK: checked by seeds and in IX body
+    #[account(
+            seeds = [
+                b"unverified_token_holder",
+                recipient.key().as_ref(),
+                asset_id.key().as_ref(),
+            ],
+            bump
+        )]
+    pub unverified_token_holder: AccountInfo<'info>,
 }
 
 pub fn add_verification_creator_handler<'info>(
@@ -74,6 +92,9 @@ pub fn add_verification_creator_handler<'info>(
     args: AnchorUpdateMetadataInstructionArgs,
 ) -> Result<()> {
     let args = args.to_mpl_update_metadata_instruction_args();
+
+    let generated_asset_id = get_asset_id(ctx.accounts.merkle_tree.key, args.nonce);
+    require_keys_eq!(ctx.accounts.asset_id.key(), generated_asset_id);
 
     // Check received creators against the accountInfo
     let mut received_creators = match args.update_args.creators.clone() {
@@ -120,8 +141,8 @@ pub fn add_verification_creator_handler<'info>(
             collection_mint: Some(&ctx.accounts.collection_mint),
             collection_metadata: Some(&ctx.accounts.collection_metadata),
             collection_authority_record_pda: None,
-            leaf_owner: &ctx.accounts.fee_payer,
-            leaf_delegate: &ctx.accounts.fee_payer,
+            leaf_owner: &ctx.accounts.unverified_token_holder,
+            leaf_delegate: &ctx.accounts.unverified_token_holder,
             payer: &ctx.accounts.fee_payer,
             merkle_tree: &ctx.accounts.merkle_tree,
             log_wrapper: &ctx.accounts.log_wrapper,
@@ -157,8 +178,8 @@ pub fn add_verification_creator_handler<'info>(
         &ctx.accounts.bubblegum_program,
         VerifyCreatorCpiAccounts {
             tree_config: &ctx.accounts.tree_config,
-            leaf_owner: &ctx.accounts.fee_payer,
-            leaf_delegate: &ctx.accounts.fee_payer,
+            leaf_owner: &ctx.accounts.unverified_token_holder,
+            leaf_delegate: &ctx.accounts.unverified_token_holder,
             merkle_tree: &ctx.accounts.merkle_tree,
             payer: &ctx.accounts.fee_payer,
             creator: &ctx.accounts.verification_creator, // The creator to verify
@@ -209,8 +230,8 @@ pub fn add_verification_creator_handler<'info>(
         TransferCpiAccounts {
             new_leaf_owner: &ctx.accounts.recipient,
             tree_config: &ctx.accounts.tree_config,
-            leaf_owner: (&ctx.accounts.fee_payer, true),
-            leaf_delegate: (&ctx.accounts.fee_payer, true),
+            leaf_owner: (&ctx.accounts.unverified_token_holder, true),
+            leaf_delegate: (&ctx.accounts.unverified_token_holder, true),
             merkle_tree: &ctx.accounts.merkle_tree,
             log_wrapper: &ctx.accounts.log_wrapper,
             compression_program: &ctx.accounts.compression_program,
@@ -224,7 +245,14 @@ pub fn add_verification_creator_handler<'info>(
             index,
         },
     );
-    transfer_cpi_ix.invoke_with_remaining_accounts(&proof)?;
+    transfer_cpi_ix.invoke_signed_with_remaining_accounts(
+        &[&UnverifiedTokenHolder::get_signer_seeds(
+            ctx.accounts.recipient.key,
+            ctx.accounts.asset_id.key,
+            &[ctx.bumps.unverified_token_holder],
+        )],
+        &proof,
+    )?;
 
     Ok(())
 }
