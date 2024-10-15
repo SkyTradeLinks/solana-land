@@ -46,10 +46,10 @@ import { dasApi } from '@metaplex-foundation/digital-asset-standard-api';
   // land merkle tree address
   const landMerkleTree = loadKeyPair(process.env.LAND_MERKLE_TREE);
   const maxDepthSizePair: ValidDepthSizePair = {
-    maxDepth: 14,
+    maxDepth: 19,
     maxBufferSize: 64,
   };
-  const canopyDepth = maxDepthSizePair.maxDepth - 5;
+  const canopyDepth = 13
   // check creation of land merkle tree
   try {
     await fetchMerkleTree(umi, publicKey(landMerkleTree.publicKey));
