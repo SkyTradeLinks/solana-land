@@ -9,9 +9,10 @@ use crate::{Data, LeafSchemaMpl, MintCreator, MyError};
 
 #[derive(Accounts)]
 pub struct MintTokenUnverified<'info> {
-    /// CHECK: fee_payer requires an account info
-    #[account(mut, signer)]
-    pub fee_payer: AccountInfo<'info>,
+    #[account(mut)]
+    pub data_account_authority: Signer<'info>,
+
+    pub collection_authority: Signer<'info>,
 
     #[account(mut, seeds = [b"data_account"], bump)]
     pub data_account: Account<'info, Data>,
@@ -59,8 +60,10 @@ pub struct MintTokenUnverified<'info> {
 
     /// CHECK: Only used as a seed for the `unverified_token_holder` account
     pub property_owner_user_wallet: UncheckedAccount<'info>,
+
     /// CHECK: Only used as a seed for the `unverified_token_holder` account
     pub asset_id: UncheckedAccount<'info>,
+
     /// CHECK: checked by seeds and in IX body
     #[account(
         seeds = [
@@ -71,6 +74,9 @@ pub struct MintTokenUnverified<'info> {
         bump
     )]
     pub unverified_token_holder: AccountInfo<'info>,
+
+    /// CHECK: checked in cpi
+    pub tree_creator: AccountInfo<'info>,
 }
 
 impl<'info> MintTokenUnverified<'info> {
@@ -103,7 +109,7 @@ pub fn mint_token_unverified_handler(
     ctx: Context<MintTokenUnverified>,
     metadata_args: Vec<u8>,
 ) -> Result<()> {
-    if ctx.accounts.data_account.authority_account != ctx.accounts.fee_payer.key() {
+    if ctx.accounts.data_account.authority_account != ctx.accounts.data_account_authority.key() {
         return err!(MyError::InvalidAuthority);
     }
 
@@ -127,12 +133,12 @@ pub fn mint_token_unverified_handler(
         .leaf_owner(&ctx.accounts.unverified_token_holder.to_account_info())
         .leaf_delegate(&ctx.accounts.unverified_token_holder.to_account_info())
         .merkle_tree(&ctx.accounts.merkle_tree.to_account_info())
-        .payer(&ctx.accounts.fee_payer.to_account_info())
-        .tree_creator_or_delegate(&ctx.accounts.fee_payer.to_account_info())
+        .payer(&ctx.accounts.data_account_authority.to_account_info())
+        .tree_creator_or_delegate(&ctx.accounts.tree_creator.to_account_info())
         .log_wrapper(&ctx.accounts.log_wrapper.to_account_info())
         .compression_program(&ctx.accounts.compression_program.to_account_info())
         .system_program(&ctx.accounts.system_program.to_account_info())
-        .collection_authority(&ctx.accounts.fee_payer.to_account_info())
+        .collection_authority(&ctx.accounts.collection_authority.to_account_info())
         .collection_mint(&ctx.accounts.collection_mint.to_account_info())
         .collection_metadata(&ctx.accounts.collection_metadata.to_account_info())
         .collection_edition(&ctx.accounts.collection_edition.to_account_info())
