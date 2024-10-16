@@ -59,7 +59,7 @@ export const mintTokenUnverified = async (
   const txSig = await program.methods
     .mintTokenUnverified(Buffer.from(metadataArgsBytes))
     .accountsStrict({
-      feePayer: wallet.publicKey,
+      dataAccountAuthority: wallet.publicKey,
       dataAccount,
       merkleTree,
       treeConfig,
@@ -76,6 +76,8 @@ export const mintTokenUnverified = async (
       propertyOwnerUserWallet,
       unverifiedTokenHolder,
       assetId,
+      collectionAuthority: wallet.publicKey,
+      treeCreator: wallet.publicKey,
     })
     // We only need to sign with wallet (current `Data.authority_account`) because the collection auth
     //  and the tree creator are set to this same pubkey

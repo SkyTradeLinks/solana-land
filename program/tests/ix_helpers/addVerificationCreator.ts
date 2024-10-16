@@ -102,7 +102,7 @@ export const addVerificationCreator = async (
       updateArgs: updateArgs,
     })
     .accountsStrict({
-      feePayer: wallet.publicKey,
+      dataAccountAuthority: wallet.publicKey,
       dataAccount,
       merkleTree,
       recipient,
@@ -118,6 +118,7 @@ export const addVerificationCreator = async (
       verificationCreator,
       assetId,
       unverifiedTokenHolder,
+      collectionAuthority: wallet.publicKey,
     })
     // We only need to sign with wallet (current `Data.authority_account`) because the collection auth
     //  and the tree creator are set to this same pubkey

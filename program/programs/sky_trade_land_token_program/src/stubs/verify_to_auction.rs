@@ -1,6 +1,11 @@
 use std::mem::size_of;
 
 use anchor_lang::prelude::*;
+use auction_house::{
+    program::AuctionHouse,
+    state::{Auction, Config},
+    AnchorTransferInstructionArgs, VerifyAuctionArgs,
+};
 use mpl_bubblegum::{
     hash::{hash_creators, hash_metadata},
     instructions::{
@@ -18,7 +23,7 @@ use crate::{
 };
 
 #[derive(Accounts)]
-pub struct AddVerificationCreator<'info> {
+pub struct VerifyToAuction<'info> {
     #[account(mut)]
     pub data_account_authority: Signer<'info>,
 
@@ -30,10 +35,6 @@ pub struct AddVerificationCreator<'info> {
     /// CHECK: merkle_tree requires an account info
     #[account(mut)]
     pub merkle_tree: AccountInfo<'info>,
-
-    /// CHECK: recipient requires an account info
-    #[account(mut)]
-    pub recipient: AccountInfo<'info>,
 
     /// CHECK: tree_config requires an account info
     #[account(mut)]
@@ -73,23 +74,27 @@ pub struct AddVerificationCreator<'info> {
     #[account(mut, seeds = [b"verification_creator"], bump)]
     pub verification_creator: AccountInfo<'info>,
 
-    /// CHECK: Only used as a seed for the `unverified_token_holder` account
-    pub asset_id: UncheckedAccount<'info>,
-
     /// CHECK: checked by seeds and in IX body
     #[account(
             seeds = [
                 b"unverified_token_holder",
-                recipient.key().as_ref(),
-                asset_id.key().as_ref(),
+                auction.seller.as_ref(),
+                auction.asset_id.as_ref(),
             ],
             bump
         )]
     pub unverified_token_holder: AccountInfo<'info>,
+
+    pub ah_program: Program<'info, AuctionHouse>,
+
+    config: Account<'info, Config>,
+
+    #[account(mut)]
+    auction: Account<'info, Auction>,
 }
 
-pub fn add_verification_creator_handler<'info>(
-    ctx: Context<'_, '_, '_, 'info, AddVerificationCreator<'info>>,
+pub fn verify_to_auction_handler<'info>(
+    ctx: Context<'_, '_, '_, 'info, VerifyToAuction<'info>>,
     args: AnchorUpdateMetadataInstructionArgs,
 ) -> Result<()> {
     if ctx.accounts.data_account.authority_account != ctx.accounts.data_account_authority.key() {
@@ -99,7 +104,7 @@ pub fn add_verification_creator_handler<'info>(
     let args = args.to_mpl_update_metadata_instruction_args();
 
     let generated_asset_id = get_asset_id(ctx.accounts.merkle_tree.key, args.nonce);
-    require_keys_eq!(ctx.accounts.asset_id.key(), generated_asset_id);
+    require_keys_eq!(ctx.accounts.auction.asset_id, generated_asset_id);
 
     // Check received creators against the accountInfo
     let mut received_creators = match args.update_args.creators.clone() {
@@ -208,7 +213,7 @@ pub fn add_verification_creator_handler<'info>(
         &proof,
     )?;
 
-    // Transfer cNFT to land owner
+    // CPI to transfer LAND token and verify auction
     let verified_received_creators = &mut received_creators;
     verified_received_creators[2].verified = true;
     let updated_creator_hash = hash_creators(verified_received_creators);
@@ -229,34 +234,39 @@ pub fn add_verification_creator_handler<'info>(
     };
 
     let updated_data_hash = hash_metadata(&verified_updated_metadata)?;
-
-    let transfer_cpi_ix = TransferCpi::new(
-        &ctx.accounts.bubblegum_program,
-        TransferCpiAccounts {
-            new_leaf_owner: &ctx.accounts.recipient,
-            tree_config: &ctx.accounts.tree_config,
-            leaf_owner: (&ctx.accounts.unverified_token_holder, true),
-            leaf_delegate: (&ctx.accounts.unverified_token_holder, true),
-            merkle_tree: &ctx.accounts.merkle_tree,
-            log_wrapper: &ctx.accounts.log_wrapper,
-            compression_program: &ctx.accounts.compression_program,
-            system_program: &ctx.accounts.system_program,
-        },
-        TransferInstructionArgs {
-            root,
-            data_hash: updated_data_hash,
-            creator_hash: updated_creator_hash,
-            nonce,
-            index,
-        },
+    let bump = [ctx.bumps.unverified_token_holder];
+    let holder_signer_seeds = &UnverifiedTokenHolder::get_signer_seeds(
+        &ctx.accounts.auction.seller,
+        &ctx.accounts.auction.asset_id,
+        &bump,
     );
-    transfer_cpi_ix.invoke_signed_with_remaining_accounts(
-        &[&UnverifiedTokenHolder::get_signer_seeds(
-            ctx.accounts.recipient.key,
-            ctx.accounts.asset_id.key,
-            &[ctx.bumps.unverified_token_holder],
-        )],
-        &proof,
+
+    auction_house::cpi::verify_auction(
+        CpiContext::new_with_signer(
+            ctx.accounts.ah_program.to_account_info(),
+            auction_house::cpi::accounts::VerifyAuctionAccounts {
+                land_pda_owner: ctx.accounts.unverified_token_holder.to_account_info(),
+                config: ctx.accounts.config.to_account_info(),
+                auction: ctx.accounts.auction.to_account_info(),
+                merkle_tree: ctx.accounts.merkle_tree.to_account_info(),
+                bubblegum_program: ctx.accounts.bubblegum_program.to_account_info(),
+                tree_config: ctx.accounts.tree_config.to_account_info(),
+                log_wrapper: ctx.accounts.log_wrapper.to_account_info(),
+                compression_program: ctx.accounts.compression_program.to_account_info(),
+                system_program: ctx.accounts.system_program.to_account_info(),
+            },
+            &[holder_signer_seeds],
+        )
+        .with_remaining_accounts(ctx.remaining_accounts.to_vec()),
+        VerifyAuctionArgs {
+            transfer_instruction_args: AnchorTransferInstructionArgs {
+                root,
+                data_hash: updated_data_hash,
+                creator_hash: updated_creator_hash,
+                nonce,
+                index,
+            },
+        },
     )?;
 
     Ok(())

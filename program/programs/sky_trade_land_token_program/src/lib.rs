@@ -10,7 +10,7 @@ use stubs::*;
 
 use utils::mpl::AnchorUpdateMetadataInstructionArgs;
 
-declare_id!("CcVHhHtZgD8CNn1quEBmbuqx84s3yRRahvSwefDxwEnw");
+declare_id!("BxNZjbRSs9RJb2zhqRuLkzdzW2GwKqGR2GWewX1BWpjW");
 
 #[program]
 pub mod sky_trade_land_token_program {
@@ -39,6 +39,15 @@ pub mod sky_trade_land_token_program {
         metadata_args: AnchorUpdateMetadataInstructionArgs,
     ) -> Result<()> {
         add_verification_creator_handler(ctx, metadata_args)
+    }
+
+    /// Adds the signature for the second creator (`VerificationCreator`) and sends the token
+    ///  to corresponding on-going auction and verifies that auction
+    pub fn verify_to_auction<'info>(
+        ctx: Context<'_, '_, '_, 'info, VerifyToAuction<'info>>,
+        metadata_args: AnchorUpdateMetadataInstructionArgs,
+    ) -> Result<()> {
+        verify_to_auction_handler(ctx, metadata_args)
     }
 }
 
