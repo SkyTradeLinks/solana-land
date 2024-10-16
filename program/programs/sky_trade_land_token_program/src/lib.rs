@@ -20,6 +20,10 @@ pub mod sky_trade_land_token_program {
         stubs::initialize::initialize(ctx)
     }
 
+    pub fn update_config(ctx: Context<UpdateConfigAccounts>) -> Result<()> {
+        stubs::update_config::update_config(ctx)
+    }
+
     pub fn mint_token(ctx: Context<MintToken>, metadata_args: Vec<u8>) -> Result<()> {
         stubs::mint_token::mint_token(ctx, metadata_args)
     }
